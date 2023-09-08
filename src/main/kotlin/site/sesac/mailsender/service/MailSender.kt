@@ -18,7 +18,7 @@ class MailSender(
     @Value("\${etc.servicename}")
     private lateinit var serviceName: String
 
-    val mimeMessage: MimeMessage = javaMailSender.createMimeMessage()
+    final val mimeMessage: MimeMessage = javaMailSender.createMimeMessage()
     val mimeMessageHelper = MimeMessageHelper(mimeMessage, false, "UTF-8")
     fun atSuccess(userMail : String ) {
         return try {
