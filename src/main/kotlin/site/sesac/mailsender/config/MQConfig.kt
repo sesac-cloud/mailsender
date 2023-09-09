@@ -40,12 +40,12 @@ class MQConfig {
 
     @Bean
     fun deadLetterExchange(): FanoutExchange {
-        return FanoutExchange("MailBox.DLX")
+        return FanoutExchange("MAIL-DLX")
     }
 
     @Bean
     fun deadLetterQueue(): Queue {
-        return QueueBuilder.durable("MailBox.DLQ").build()
+        return QueueBuilder.durable("MAIL-DLQ").build()
     }
 
     @Bean
@@ -55,8 +55,8 @@ class MQConfig {
 
     @Bean
     fun messagesQueue(): Queue {
-        return QueueBuilder.durable("MailBox")
-            .withArgument("x-dead-letter-exchange", "MailBox.DLX")
+        return QueueBuilder.durable("mail")
+            .withArgument("x-dead-letter-exchange", "MAIL-DLX")
             .build()
     }
 

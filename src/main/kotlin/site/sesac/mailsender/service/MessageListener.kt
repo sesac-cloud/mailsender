@@ -9,7 +9,7 @@ import site.sesac.mailsender.data.MailMessage
 private val logger = KotlinLogging.logger {}
 @Component
 class MessageListener(private val mailSender: MailSender) {
-    @RabbitListener(queues = ["MailBox"], containerFactory = "prefetchOneContainerFactory" )
+    @RabbitListener(queues = ["mail"], containerFactory = "prefetchOneContainerFactory" )
     fun receiveMessage(message: org.springframework.amqp.core.Message) = try {
 
         val objectMapper = jacksonObjectMapper()
@@ -28,4 +28,14 @@ class MessageListener(private val mailSender: MailSender) {
     }catch (e : Exception){
         logger.error { "Process error" }
     }
+
+//    @RabbitListener(queues = ["MAIL-DLQ"], containerFactory = "prefetchOneContainerFactory")
+//    fun dlqListener(message: org.springframework.amqp.core.Message) {
+//        val objectMapper = jacksonObjectMapper()
+//        val mailMessage: MailMessage = objectMapper.readValue(String(message.body), MailMessage::class.java)
+//        logger.info { "${mailMessage.userMail} : DLQ Request Get Message" }
+//
+//    }
+
+
 }
