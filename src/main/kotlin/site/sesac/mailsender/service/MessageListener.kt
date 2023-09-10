@@ -8,12 +8,14 @@ import site.sesac.mailsender.data.MailMessage
 
 private val logger = KotlinLogging.logger {}
 @Component
-class MessageListener(private val mailSender: MailSender) {
+class MessageListener (private val mailSender: SendMail)
+{
     @RabbitListener(queues = ["mail"], containerFactory = "prefetchOneContainerFactory" )
     fun receiveMessage(message: org.springframework.amqp.core.Message) = try {
+        val messageBody = String(message.body).substring(0, String(message.body).length-1 ).replace("""\""","").substring(1)
 
         val objectMapper = jacksonObjectMapper()
-        val mailMessage: MailMessage = objectMapper.readValue(String(message.body), MailMessage::class.java)
+        val mailMessage: MailMessage = objectMapper.readValue(messageBody, MailMessage::class.java)
         logger.info { "${mailMessage.userMail} : Request Get Message" }
 
         if(mailMessage.mailType == "S"){
@@ -31,11 +33,13 @@ class MessageListener(private val mailSender: MailSender) {
 
 //    @RabbitListener(queues = ["MAIL-DLQ"], containerFactory = "prefetchOneContainerFactory")
 //    fun dlqListener(message: org.springframework.amqp.core.Message) {
+//        val messageBody = String(message.body).substring(0, String(message.body).length-1 ).replace("""\""","").substring(1)
+//
 //        val objectMapper = jacksonObjectMapper()
-//        val mailMessage: MailMessage = objectMapper.readValue(String(message.body), MailMessage::class.java)
+//        val mailMessage: MailMessage = objectMapper.readValue(messageBody, MailMessage::class.java)
 //        logger.info { "${mailMessage.userMail} : DLQ Request Get Message" }
 //
-//    }
+//  }
 
 
 }
