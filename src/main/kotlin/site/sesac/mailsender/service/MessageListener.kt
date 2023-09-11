@@ -18,13 +18,17 @@ class MessageListener (private val mailSender: SendMail)
         val mailMessage: MailMessage = objectMapper.readValue(messageBody, MailMessage::class.java)
         logger.info { "${mailMessage.userMail} : Request Get Message" }
 
-        if(mailMessage.mailType == "S"){
-            mailSender.atSuccess(mailMessage.userMail)
+        when (mailMessage.mailType) {
+            "S" -> {
+                mailSender.atSuccess(mailMessage.userMail)
+            }
+            "F" -> {
+                mailSender.atFail(mailMessage.userMail)
+            }
+            "TokenException" -> {
+                mailSender.atTokenError(mailMessage.userMail)
+            }
         }
-        else if(mailMessage.mailType == "F"){
-            mailSender.atFail(mailMessage.userMail)
-        }
-
         logger.info { "${mailMessage.userMail} : Process Done" }
 
     }catch (e : Exception){

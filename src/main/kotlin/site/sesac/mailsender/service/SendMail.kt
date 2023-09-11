@@ -51,4 +51,22 @@ class SendMail(
 
     }
 
+    fun atTokenError(userMail : String ) {
+        val mimeMessage: MimeMessage = javaMailSender.createMimeMessage()
+
+        return try {
+            val mimeMessageHelper = MimeMessageHelper(mimeMessage, false, "UTF-8")
+
+            mimeMessageHelper.setTo(userMail) // 메일 수신자
+            mimeMessageHelper.setSubject("토큰교체필요") // 메일 제목
+            mimeMessageHelper.setText("api 토큰교체 필요") // 메일 본문 내용, HTML 여부
+            javaMailSender.send(mimeMessage)
+            //      logger.info("Fail Mail Sending Success to ${userMail}")
+        } catch (e: MessagingException) {
+            //      logger.error("Fail Mail Sending fail ${userMail}")
+            throw RuntimeException(e)
+        }
+
+    }
+
 }
